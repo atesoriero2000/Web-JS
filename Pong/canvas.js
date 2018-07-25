@@ -28,7 +28,7 @@ var Ball = {
     if(this.x - this.radius <= Player1.x + Player1.width && this.y + this.radius >= Player1.y && this.y-this.radius <= Player1.y + Player1.height ){
       this.hits++;
       this.dx = 4 + this.hits/10;
-      this.dy = (this.y - Player1.y - Player1.height/2)/(Player1.height/2) * 2; // - means top half
+      this.dy = (this.y - Player1.y - Player1.height/2)/(Player1.height/2) * 4; // - means top half
 
     }
 
@@ -36,7 +36,7 @@ var Ball = {
     if(this.x + this.radius >= Player2.x && this.y + this.radius >= Player2.y && this.y-this.radius <= Player2.y + Player2.height ){
       this.hits++;
       this.dx = -(4 + this.hits/10);
-      this.dy = (this.y - Player2.y - Player2.height/2)/(Player2.height/2) * 2; // - means top half
+      this.dy = (this.y - Player2.y - Player2.height/2)/(Player2.height/2) * 4; // - means top half
     }
 
     if (this.x + this.radius >= canvas.width){// if player 1 scored
@@ -165,16 +165,25 @@ function endGame() {
 
 function drawScoreBoard() {
 
-  c.font = "35px Impact";
-  c.fillText( Player1.score + " : " + Player2.score, canvas.width/2 - 25, 50 );
 
   c.beginPath();
   c.moveTo(canvas.width/2, 0);
   c.lineTo(canvas.width/2, canvas.height);
   c.stroke();
 
+  c.fillStyle = 'rgb(255,255,255)';
+  c.fillRect(canvas.width/2 - 60, 24, 120, 35);
+
+  c.fillStyle = 'rgb(0,0,0)';
+  c.font = "40px monospace";
+  c.fillText( Player1.score + " : " + Player2.score, canvas.width/2 - 60, 50 );
+
+
+
+
+
   if (END_GAME){
-    c.font = "50px Impact";
+    c.font = "50px monospace";
     if(Player1.score === 10){
       c.fillText( "Player 1 Wins!!", canvas.width/2 - 150, canvas.height/2 - 50 );
 
@@ -192,10 +201,10 @@ function animate() {
 
   c.clearRect(0,0,window.innerWidth, window.innerHeight);
 
+  drawScoreBoard();
   Ball.update();
   Player1.update();
   Player2.update();
-  drawScoreBoard();
   console.log(Ball.hits + ", " + Ball.dx);
 
 }

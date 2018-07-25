@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Snake Game</title>
+    <title>Pong Edit</title>
     <style>
 
     #canvas{
@@ -25,11 +25,10 @@
     var c = canvas.getContext('2d');
 
     var Ball = {
-      hasBeenServed: false,
       numberOfHits: 0,
 
-      x: 200,
-      y: 200,
+      x: canvas.width/2,
+      y: canvas.height/2,
 
       dx: 1,
       dy: 1,
@@ -42,8 +41,7 @@
         if(this.x < Player1.x + Player1.width && this.x > Player1.x){
           if(this.y > Player1.y){
             if(this.y < Player1.y + Player1.width){
-
-              this.dy *= -1;
+              this.dx = 10;
 
             }
           }
@@ -53,16 +51,46 @@
           if(this.y > Player2.y){
             if(this.y < Player2.y + Player2.width){
 
-              this.dy *= -1;
-
+              this.dx = -10;
             }
           }
         }
+
+
 
         if(this.y-this.radius <= 0 || this.y + this.radius >= canvas.height){
           this.dy *= -1;
         }
 
+        if( this.x + this.radius > canvas.width ){
+          Player1.score++;
+          this.x = canvas.width/2;
+          this.y = canvas.height/2;
+          this.dx = -1;
+          this.dy = -1;
+
+          if(Player1.score === 10){
+            this.dx = 0;
+            this.dy = 0;
+
+            alert("PLAYER 1 WINS");
+          }
+        }
+
+        if( this.x - this.radius < 0 ){
+          Player2.score++;
+          this.x = canvas.width/2;
+          this.y = canvas.height/2;
+          this.dx = 1;
+          this.dy = 1;
+
+          if(Player1.score === 10){
+            this.dx = 0;
+            this.dy = 0;
+
+            alert("PLAYER 2 WINS");
+          }
+        }
       },
 
       update: function(){
@@ -90,6 +118,8 @@
 
       dy: 0,
 
+      score: 0,
+
       checkBoundaries: function(){
         if(this.y <= 0 || this.y + this.height >= canvas.height){
           this.dy = 0;
@@ -114,6 +144,8 @@
         width: 10,
         height: 60,
 
+        score: 0,
+
         checkBoundaries: function(){
           if(this.y <= 0 || this.y + this.height >= canvas.height){
             this.dy = 0;
@@ -134,6 +166,16 @@
 
       c.clearRect(0,0,window.innerWidth, window.innerHeight);
 
+      c.lineWidth = 10;
+      // c.setLineDash([10, 10]);
+      c.beginPath();
+      c.moveTo(canvas.width/2, 0);
+      c.lineTo(canvas.width/2, canvas.height);
+      c.stroke();
+
+      c.font = '40px monospace';
+      c.fillText(Player1.score + ':' + Player2.score, canvas.width/2 - 35, 50);
+
       Ball.update();
       Player1.update();
       Player2.update();
@@ -141,10 +183,11 @@
 
     animate();
 
+
     var v = 10;
     window.addEventListener('keypress', (key) => {
 
-      console.log("Down: " + key.key);
+      //console.log("Down: " + key.key);
 
       key.key = key.key.toLowerCase();
 
@@ -172,7 +215,7 @@
 
     window.addEventListener('keyup', (key) => {
 
-      console.log("Up: " + key.key);
+    //  console.log("Up: " + key.key);
 
       key.key = key.key.toLowerCase();
 
